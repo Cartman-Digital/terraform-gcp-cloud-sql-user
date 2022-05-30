@@ -41,6 +41,7 @@ resource "vault_generic_secret" "sqlproxy_secret" {
     {
       "database_user"     = each.key
       "database_password" = lookup(each.value, "password", try(random_password.password[each.key].result, ""))
+      "credentials.json"  = lookup({ for k, v in var.users : k => google_service_account_key.sa_key[k].private_key if lookup(v, "create_sa", false) }, each.key, "")
     }
   )
 }

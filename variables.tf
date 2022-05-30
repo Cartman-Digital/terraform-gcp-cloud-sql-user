@@ -11,3 +11,5 @@ variable "vault_secret_path" {}
 variable "expose_password" {
   default = false
 }
+
+variable "project" {}
