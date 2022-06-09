@@ -15,21 +15,21 @@ resource "google_sql_user" "user" {
 resource "postgresql_grant" "permissions" {
   for_each = var.users
 
-  database = var.database
-  role     = lookup(each.value, "role", each.key)
-  schema   = "public"
-
+  database    = var.database
+  role        = lookup(each.value, "role", each.key)
+  schema      = "public"
+  objects     = lookup(each.value, "objects", [])
   object_type = "table"
   privileges  = lookup(each.value, "permissions", ["SELECT"])
   depends_on  = [google_sql_user.user]
 }
 
 resource "postgresql_grant" "seq_permissions" {
-  for_each = { for k, v in var.users : k => v if lookup(v, "seq_permissions", []) != [] }
-  database = var.database
-  role     = lookup(each.value, "role", each.key)
-  schema   = "public"
-
+  for_each    = { for k, v in var.users : k => v if lookup(v, "seq_permissions", []) != [] }
+  database    = var.database
+  role        = lookup(each.value, "role", each.key)
+  schema      = "public"
+  objects     = lookup(each.value, "seq_objects", [])
   object_type = "sequence"
   privileges  = lookup(each.value, "seq_permissions", ["SELECT"])
 }
