@@ -1,5 +1,5 @@
 resource "random_password" "password" {
-  for_each         = { for k, v in var.users : k => v if lookup(v, "password", "") == "" }
+  for_each         = { for k, v in var.users : k => v if lookup(v, "password", "") == "" && lookup(v, "type", "BUILT_IN") != "CLOUD_IAM_USER" }
   length           = 16
   special          = lookup(each.value, "special", false)
   override_special = lookup(each.value, "override_special", null)
@@ -10,6 +10,7 @@ resource "google_sql_user" "user" {
   name     = each.key
   instance = var.postgres_instance_name
   password = lookup(each.value, "password", try(random_password.password[each.key].result, ""))
+  type     = lookup(each.value, "type", "BUILT_IN")
 }
 
 resource "postgresql_grant" "permissions" {
@@ -35,7 +36,7 @@ resource "postgresql_grant" "seq_permissions" {
 }
 
 resource "vault_generic_secret" "sqlproxy_secret" {
-  for_each = var.users
+  for_each = { for k, v in var.users : k => v if lookup(v, "type", "") != "CLOUD_IAM_USER" }
   path     = "${var.vault_secret_path}/${each.key}"
   data_json = jsonencode(
     {
