@@ -35,8 +35,8 @@ resource "postgresql_grant" "seq_permissions" {
   privileges  = lookup(each.value, "seq_permissions", ["SELECT"])
 }
 
-resource "vault_generic_secret" "sqlproxy_secret" {
-  for_each = { for k, v in var.users : k => v if lookup(v, "type", "") != "CLOUD_IAM_USER" }
+resource "vault_generic_secret" "user_credentials" {
+  for_each = { for k, v in var.users : k => v if var.vault_secret_path != "" && lookup(v, "type", "") != "CLOUD_IAM_USER" }
   path     = "${var.vault_secret_path}/${each.key}"
   data_json = jsonencode(
     {
