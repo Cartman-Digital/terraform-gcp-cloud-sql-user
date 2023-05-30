@@ -1,5 +1,5 @@
 terraform {
-  required_version = "1.3.2"
+  required_version = "1.4.2"
   required_providers {
     google = {
       source  = "hashicorp/google"
@@ -32,10 +32,6 @@ terraform {
     tls = {
       source  = "hashicorp/tls"
       version = "~> 4.0.0"
-    }
-    vault = {
-      source  = "hashicorp/vault"
-      version = "~> 3.1.0"
     }
   }
 }

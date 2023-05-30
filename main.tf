@@ -35,10 +35,23 @@ resource "postgresql_grant" "seq_permissions" {
   privileges  = lookup(each.value, "seq_permissions", ["SELECT"])
 }
 
-resource "vault_generic_secret" "user_credentials" {
-  for_each = { for k, v in var.users : k => v if var.vault_secret_path != "" && lookup(v, "type", "") != "CLOUD_IAM_USER" }
-  path     = "${var.vault_secret_path}/${each.key}"
-  data_json = jsonencode(
+resource "google_secret_manager_secret" "database_credentials" {
+  for_each  = { for k, v in var.users : k => v if var.save_credentials && lookup(v, "type", "") != "CLOUD_IAM_USER" }
+  secret_id = "${var.database}_user_${each.key}"
+
+  labels = {
+    terraform = "created"
+  }
+
+  replication {
+    automatic = true
+  }
+}
+
+resource "google_secret_manager_secret_version" "database_credentials" {
+  for_each = { for k, v in var.users : k => v if var.save_credentials && lookup(v, "type", "") != "CLOUD_IAM_USER" }
+  secret   = google_secret_manager_secret.database_credentials[each.key].id
+  secret_data = jsonencode(
     {
       "database_user"     = each.key
       "database_password" = lookup(each.value, "password", try(random_password.password[each.key].result, ""))

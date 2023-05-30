@@ -1,6 +1,6 @@
 # Terraform GCP Cloud SQL users setup
 
-Module creates users for Cloud SQL instance, add permissions and exports users to Vault.
+Module creates users for Cloud SQL instance, add permissions and exports users to GCP Secret Manager.
 
 Only PSQL is supported.
 
@@ -34,7 +34,6 @@ module "database_users" {
       type : "CLOUD_IAM_USER"
     }
   }
-  vault_secret_path      = var.vault_secret_path
   database               = local.postgres_database_name
   postgres_instance_name = local.instance_name
   project                = var.project
@@ -65,41 +64,44 @@ No requirements.
 
 | Name | Version |
 |------|---------|
-| google | n/a |
-| postgresql | n/a |
-| random | n/a |
-| vault | n/a |
+| <a name="provider_google"></a> [google](#provider\_google) | n/a |
+| <a name="provider_postgresql"></a> [postgresql](#provider\_postgresql) | n/a |
+| <a name="provider_random"></a> [random](#provider\_random) | n/a |
 
 ## Modules
 
-No Modules.
+No modules.
 
 ## Resources
 
-| Name |
-|------|
-| [google_project_iam_member](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/project_iam_member) |
-| [google_service_account](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/service_account) |
-| [google_service_account_key](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/service_account_key) |
-| [google_sql_user](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/sql_user) |
-| [postgresql_grant](https://registry.terraform.io/providers/cyrilgdn/postgresql/latest/docs/resources/grant) |
-| [random_password](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/password) |
-| [vault_generic_secret](https://registry.terraform.io/providers/hashicorp/vault/latest/docs/resources/generic_secret) |
+| Name | Type |
+|------|------|
+| [google_project_iam_member.assign_cloudsql_client](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/project_iam_member) | resource |
+| [google_project_iam_member.test](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/project_iam_member) | resource |
+| [google_project_iam_member.test_cloudsql_client](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/project_iam_member) | resource |
+| [google_secret_manager_secret.database_credentials](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/secret_manager_secret) | resource |
+| [google_secret_manager_secret_version.database_credentials](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/secret_manager_secret_version) | resource |
+| [google_service_account.sa](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/service_account) | resource |
+| [google_service_account_key.sa_key](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/service_account_key) | resource |
+| [google_sql_user.user](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/sql_user) | resource |
+| [postgresql_grant.permissions](https://registry.terraform.io/providers/cyrilgdn/postgresql/latest/docs/resources/grant) | resource |
+| [postgresql_grant.seq_permissions](https://registry.terraform.io/providers/cyrilgdn/postgresql/latest/docs/resources/grant) | resource |
+| [random_password.password](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/password) | resource |
 
 ## Inputs
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| database | Database name used for permission setup | `string` | n/a | yes |
-| expose\_password | Expose password to Terraform output | `bool` | `false` | no |
-| postgres\_instance\_name | Cloud SQL instance name | `string` | n/a | yes |
-| project | Project ID | `string` | n/a | yes |
-| users | Map of users and their attributes, key is the user login | `map` | `{}` | no |
-| vault\_secret\_path | Path to secret in local vault, used mainly to save the credentials instead of displaying them to the console | `string` | `""` | no |
+| <a name="input_database"></a> [database](#input\_database) | Database name used for permission setup | `string` | n/a | yes |
+| <a name="input_expose_password"></a> [expose\_password](#input\_expose\_password) | Expose password to Terraform output | `bool` | `false` | no |
+| <a name="input_postgres_instance_name"></a> [postgres\_instance\_name](#input\_postgres\_instance\_name) | Cloud SQL instance name | `string` | n/a | yes |
+| <a name="input_project"></a> [project](#input\_project) | Project ID | `string` | n/a | yes |
+| <a name="input_save_credentials"></a> [save\_credentials](#input\_save\_credentials) | Save credentials to GCP Secret Manager | `bool` | `true` | no |
+| <a name="input_users"></a> [users](#input\_users) | Map of users and their attributes, key is the user login | `map` | `{}` | no |
 
 ## Outputs
 
 | Name | Description |
 |------|-------------|
-| passwords | Passwords generated |
+| <a name="output_passwords"></a> [passwords](#output\_passwords) | Passwords generated |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->

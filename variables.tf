@@ -13,12 +13,11 @@ variable "database" {
   type        = string
 }
 
-variable "vault_secret_path" {
-  description = "Path to secret in local vault, used mainly to save the credentials instead of displaying them to the console"
-  default     = ""
-  type        = string
+variable "save_credentials" {
+  description = "Save credentials to GCP Secret Manager"
+  type        = bool
+  default     = true
 }
-
 variable "expose_password" {
   description = "Expose password to Terraform output"
   default     = false
