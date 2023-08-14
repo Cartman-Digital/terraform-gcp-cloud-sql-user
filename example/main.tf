@@ -36,7 +36,6 @@ module "database_users" {
       type : "CLOUD_IAM_USER"
     }
   }
-  vault_secret_path      = var.vault_secret_path
   database               = var.project
   postgres_instance_name = module.postgresql.postgres_instance_name
   project                = var.project
@@ -52,8 +51,8 @@ module "postgresql" {
   cluster_token          = module.gke.access_token
   cluster_endpoint       = module.gke.endpoint
   environment            = var.environment
+  vault_secret_path      = var.vault_secret_path
   availability_type      = "REGIONAL"
-  vault_secret_path      = "secret/devops/production/${var.project}/${var.environment}"
   private_ip             = true
   public_ip              = true
   sqlproxy_dependencies  = false
