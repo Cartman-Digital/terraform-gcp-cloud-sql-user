@@ -8,6 +8,12 @@ variable "users" {
   default     = {}
 }
 
+variable "owner" {
+  description = "If set, default privileges will be set for users"
+  type        = string
+  default     = ""
+}
+
 variable "database" {
   description = "Database name used for permission setup"
   type        = string
