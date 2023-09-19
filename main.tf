@@ -35,9 +35,31 @@ resource "postgresql_grant" "seq_permissions" {
   privileges  = lookup(each.value, "seq_permissions", ["SELECT"])
 }
 
+
+resource "postgresql_default_privileges" "permissions" {
+  for_each    = { for k, v in var.users : k => v if lookup(v, "permissions", []) != [] && var.owner != "" }
+  database    = var.database
+  role        = lookup(each.value, "role", each.key)
+  schema      = "public"
+  owner       = var.owner
+  object_type = "table"
+  privileges  = lookup(each.value, "permissions", ["SELECT"])
+  depends_on  = [google_sql_user.user]
+}
+
+resource "postgresql_default_privileges" "seq_permissions" {
+  for_each    = { for k, v in var.users : k => v if lookup(v, "seq_permissions", []) != [] && var.owner != "" }
+  database    = var.database
+  role        = lookup(each.value, "role", each.key)
+  schema      = "public"
+  owner       = var.owner
+  object_type = "sequence"
+  privileges  = lookup(each.value, "seq_permissions", ["SELECT"])
+}
+
 resource "google_secret_manager_secret" "database_credentials" {
   for_each  = { for k, v in var.users : k => v if var.save_credentials && lookup(v, "type", "") != "CLOUD_IAM_USER" }
-  secret_id = "${var.database}_user_${each.key}"
+  secret_id = "${var.database}_user_${replace(each.key, ".", "_")}"
 
   labels = {
     terraform = "created"

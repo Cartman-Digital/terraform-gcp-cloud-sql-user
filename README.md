@@ -84,6 +84,8 @@ No modules.
 | [google_service_account.sa](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/service_account) | resource |
 | [google_service_account_key.sa_key](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/service_account_key) | resource |
 | [google_sql_user.user](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/sql_user) | resource |
+| [postgresql_default_privileges.permissions](https://registry.terraform.io/providers/cyrilgdn/postgresql/latest/docs/resources/default_privileges) | resource |
+| [postgresql_default_privileges.seq_permissions](https://registry.terraform.io/providers/cyrilgdn/postgresql/latest/docs/resources/default_privileges) | resource |
 | [postgresql_grant.permissions](https://registry.terraform.io/providers/cyrilgdn/postgresql/latest/docs/resources/grant) | resource |
 | [postgresql_grant.seq_permissions](https://registry.terraform.io/providers/cyrilgdn/postgresql/latest/docs/resources/grant) | resource |
 | [random_password.password](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/password) | resource |
@@ -94,6 +96,7 @@ No modules.
 |------|-------------|------|---------|:--------:|
 | <a name="input_database"></a> [database](#input\_database) | Database name used for permission setup | `string` | n/a | yes |
 | <a name="input_expose_password"></a> [expose\_password](#input\_expose\_password) | Expose password to Terraform output | `bool` | `false` | no |
+| <a name="input_owner"></a> [owner](#input\_owner) | If set, default privileges will be set for users | `string` | `""` | no |
 | <a name="input_postgres_instance_name"></a> [postgres\_instance\_name](#input\_postgres\_instance\_name) | Cloud SQL instance name | `string` | n/a | yes |
 | <a name="input_project"></a> [project](#input\_project) | Project ID | `string` | n/a | yes |
 | <a name="input_save_credentials"></a> [save\_credentials](#input\_save\_credentials) | Save credentials to GCP Secret Manager | `bool` | `true` | no |

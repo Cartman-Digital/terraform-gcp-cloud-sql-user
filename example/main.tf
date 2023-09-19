@@ -12,7 +12,7 @@ provider "postgresql" {
 module "database_users" {
   source = "../"
   users = {
-    "ackee.fella" : {
+    "ackee-fella" : {
       permissions : ["DELETE", "SELECT", "INSERT", "REFERENCES", "TRIGGER", "TRUNCATE", "UPDATE"]
       seq_permissions : ["USAGE", "UPDATE", "SELECT"]
       seq_objects : [
@@ -36,6 +36,7 @@ module "database_users" {
       type : "CLOUD_IAM_USER"
     }
   }
+  owner                  = "postgres"
   database               = var.project
   postgres_instance_name = module.postgresql.postgres_instance_name
   project                = var.project
