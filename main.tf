@@ -1,12 +1,12 @@
 resource "random_password" "password" {
-  for_each         = { for k, v in var.users : k => v if lookup(v, "password", "") == "" && lookup(v, "type", "BUILT_IN") != "CLOUD_IAM_USER" }
+  for_each         = { for k, v in var.users : k => v if lookup(v, "password", "") == "" && lookup(v, "type", "BUILT_IN") != "CLOUD_IAM_USER" && lookup(v, "dont_create_user", false) != true }
   length           = 16
   special          = lookup(each.value, "special", false)
   override_special = lookup(each.value, "override_special", null)
 }
 
 resource "google_sql_user" "user" {
-  for_each = var.users
+  for_each = { for k, v in var.users : k => v if lookup(v, "dont_create_user", false) != true }
   name     = each.key
   instance = var.postgres_instance_name
   password = lookup(each.value, "password", try(random_password.password[each.key].result, ""))
@@ -71,7 +71,7 @@ resource "google_secret_manager_secret" "database_credentials" {
 }
 
 resource "google_secret_manager_secret_version" "database_credentials" {
-  for_each = { for k, v in var.users : k => v if var.save_credentials && lookup(v, "type", "") != "CLOUD_IAM_USER" }
+  for_each = { for k, v in var.users : k => v if var.save_credentials && lookup(v, "type", "") != "CLOUD_IAM_USER" && lookup(v, "dont_create_user", false) != true }
   secret   = google_secret_manager_secret.database_credentials[each.key].id
   secret_data = jsonencode(
     {
