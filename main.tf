@@ -66,7 +66,7 @@ resource "google_secret_manager_secret" "database_credentials" {
   }
 
   replication {
-    automatic = true
+    auto {}
   }
 }
 

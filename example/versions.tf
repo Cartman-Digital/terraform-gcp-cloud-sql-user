@@ -1,29 +1,29 @@
 terraform {
-  required_version = "1.5.6"
+  required_version = "1.7.1"
   required_providers {
     google = {
       source  = "hashicorp/google"
-      version = "~> 4.80.0"
+      version = "~> 5.13.0"
     }
     google-beta = {
       source  = "hashicorp/google-beta"
-      version = "~> 4.80.0"
+      version = "~> 5.13.0"
     }
     kubernetes = {
       source  = "hashicorp/kubernetes"
-      version = "~> 2.14.0"
+      version = "~> 2.25.0"
     }
     helm = {
       source  = "hashicorp/helm"
-      version = "~> 2.7.0"
+      version = "~> 2.12.0"
     }
     postgresql = {
       source  = "cyrilgdn/postgresql"
-      version = "~> 1.20.0"
+      version = "~> 1.21.0"
     }
     random = {
       source  = "hashicorp/random"
-      version = "~> 3.1.0"
+      version = "~> 3.6.0"
     }
     template = {
       source  = "hashicorp/template"
