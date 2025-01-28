@@ -22,7 +22,7 @@ variable "database" {
 variable "save_credentials" {
   description = "Save credentials to GCP Secret Manager"
   type        = bool
-  default     = true
+  default     = false
 }
 variable "expose_password" {
   description = "Expose password to Terraform output"

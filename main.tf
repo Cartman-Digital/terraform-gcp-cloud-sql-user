@@ -9,7 +9,7 @@ resource "google_sql_user" "user" {
   for_each = { for k, v in var.users : k => v if lookup(v, "dont_create_user", false) != true }
   name     = each.key
   instance = var.postgres_instance_name
-  password = lookup(each.value, "password", try(random_password.password[each.key].result, ""))
+  password = lookup(each.value, "type", "BUILT_IN") == "BUILT_IN" ? lookup(each.value, "password", try(random_password.password[each.key].result, "")) : null
   type     = lookup(each.value, "type", "BUILT_IN")
 }
 
